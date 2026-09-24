@@ -1,4 +1,4 @@
-# Estimación del nivel de Estrés basada en la respuesta galvánica cutánea (GSR)
+# CALCULO AMBULATORIO DEL ÍNDICE PLETISMOGRAFICO QUIRÚRGICO (SPI)
 
 Instrumentación Biomédica y Biosensores, Ingeniería Biomédica, UMNG (Semestre VII).
 
@@ -7,187 +7,69 @@ Instrumentación Biomédica y Biosensores, Ingeniería Biomédica, UMNG (Semestr
 - Antonia Garzón Vanegas - 5600843
 - Ana Sofia Conde Porras - 5600770
 
-## Objetivo general
-Diseñar, construir y evaluar un dispositivo vestible "wearable" basado en la respuesta galvánica cutánea (GSR) que permita estimar cualitativamente el nivel de estrés de una persona sana mediante electrodos de contacto (monedas), un circuito de acondicionamiento analógico y un microcontrolador de adquisición 
+## I. INTRODUCCIÓN
+Esta práctica se realizó con el objetivo de evaluar en tiempo real el equilibrio entre la nociocepción la cual es la respuesta del sistema nervioso a estímulos potencialmente dañinos y la analgesia, este es el efecto de los fármacos que bloquean dicha respuesta; se han buscado índices cuantitativos y objetivos para evaluar ambas variables, uno de los índices es el Índice Pletismográfico Quirúrgico (SPI), el cual se obtiene a través de la técnica fotopletismográfica (PPG).  
+El PPG permite detectar los cambios en el volumen sanguíneo periférico asociados a cada latido cardíaco, y el SPI se encarga de relacionar la amplitud y la frecuencia de los pulsos cardíacos, con esto tenemos como resultado un valor numérico entre 0 y 100, donde valores más altos indican una mayor respuesta nocioceptiva (estrés quirúrgico), o hasta cambios de temperatura.  
+La presente práctica busca el desarrollo de un sistema de medición continua del SPI utilizando un sensor óptico de reflectancia y así poder realizar la detección de picos por medio de MATLAB, para la adquisición y cálculo del SPI. Todo lo anterior se realiza con el motivo de cumplir los siguientes objetivos:
 
-## Objetivos específicos
-- Identificar las componentes estacionarias (SCL) y transitoria (SCR) de la señal GSR a partir de la revisión de la literatura.
-- Construir un vestible con electrodos tipo moneda ubicados en la mano, capaz de capturar de forma continua las variaciones de la GSR.
-- Diseñar y calcular un circuito divisor de tensión con limitación de corriente, garantizando que a través de la piel del sujeto no circule una corriente mayor a 1 mA, incluso en el caso extremo en que la resistencia de la piel sea igual a 0 Ω.
-- Acondicionar la señal mediante un filtro pasivo RC que reduzca el ruido de alta frecuencia sin distorsionar la dinámica lenta de la SCR.
-- Adquirir y visualizar la señal en tiempo real mediante Arduino UNO y MATLAB.
-- Definir umbrales de estrés (bajo, moderado, alto) a partir de una prueba controlada de respiración profunda.
-- Explorar la transmisión inalámbrica de los datos mediante un módulo ESP32 (Bluetooth/WiFi).
-- Explicar el comportamiento observado de la GSR.
+### Objetivo general
+Desarrollar un sistema de medición continua del índice pletismográfico quirúrgico (SPI) en condiciones ambulatorias. 
 
-## Resumen de la práctica 
-En esta práctica se construyó y evaluó un vestible capaz de capturar de forma continua la respuesta galvánica cutánea (GSR, Galvanic Skin Response) de una persona sana, con el fin de estimar su nivel de estrés. El dispositivo consiste en dos electrodos (monedas) ubicados sobre la piel de la mano, conectados a un circuito acondicionador (divisor de tensión más filtro RC pasivo) que entrega una señal analógica de la conductancia cutánea. Esta señal es adquirida por un Arduino UNO y visualizada en tiempo real desde MATLAB. Adicionalmente se intentó adaptar el sistema para transmisión inalámbrica mediante un módulo ESP32.
+### Objetivos específicos
+- Reconocer las características fundamentales de la onda de pulso a partir de las cuales se obtiene el SPI.
+- Construir un sistema que calcule el SPI en tiempo real y bajo condiciones ambulatorias.
+- Validar el funcionamiento dinámico del sistema desarrollado mediante la aplicación de un estímulo térmico en este caso el frío localizado en la región cervical (cuello) para inducir una respuesta nociceptiva y de activación simpática por medio de una botella de agua fría. 
 
-## Estructura del repositorio
-- Parte A = Revisión teórica, IEC 60479 y cálculos de diseño.
-- Parte B = Construcción, prueba de reposo/respiración, umbrales.
-- Parte C = Transmisión inalámbrica.
+## II. MARCO TEÓRICO
+### a) PPG para la medición del volumen sanguíneo periférico.
+La fotopletismografía es una técnica no invasiva que permite detectar cambios en el volumen sanguíneo en los tejidos periféricos, como los dedos, a través de la absorción de luz por parte de la hemoglobina. Un sensor de PPG consta de una fuente de luz como un LED y un fotodetector; la luz emitida atraviesa el tejido, una parte de esa luz es absorbida por la sangre, mientras que el resto llega al fotodetector. La cantidad de luz absorbida varía respecto al volumen sanguíneo arterial generando una señal pulsátil que permite comprender la actividad cardiovascular y del sistema nervioso autónomo.  
+El PPG indica la vasoconstricción simpática: ante una activación del sistema nervioso simpático como lo es el dolor o un estado de alerta, los vasos sanguíneos periféricos se contraen, disminuyendo la amplitud de la onda de pulso y alterando la frecuencia cardíaca. Por lo anterior, esta señal es usada para estimar el equilibrio nocicepción-analgesia y el SPI.
+
+### b) Índice Pletismográfico Quirúrgico (SPI).
+El SPI es un parámetro cuantitativo que evalúa el equilibrio entre nocicepción y analgesia, especialmente utilizado durante la anestesia general, este se calcula combinando dos componentes de la onda de pulso:  
+- Amplitud normalizada de la onda de pulso (PPGA / NP): Representa la relación entre la amplitud de la onda pulsátil y la componente continua de la señal PP, esta disminuye cuando ocurre vasoconstricción simpática ante un estado de dolor o alerta.  
+- Intervalo entre latidos normalizado (HBI / IBI): Indica los cambios en la frecuencia cardíaca. Durante la activación simpática, el intervalo entre latidos tiende a disminuir (lo que indica un aumento de la frecuencia cardíaca).
+La fórmula matemática para el cálculo del SPI según lo investigado corresponde a:
+
+<img width="941" height="94" alt="image" src="https://github.com/user-attachments/assets/93738e7b-0fba-4c9b-8b41-230f81efe8bf" />
+(Ecuación 1. Fórmula cálculo SPI)
+Los rangos de valores para PPGA-norm y HBI-norm están escalados entre 0 y 100, mientras que las constantes 0.7 y 0.3 son coeficientes establecidos  para priorizar el componente vascular. El resultado del SPI se obtiene en una escala entre 0 y 100, donde valores más altos reflejan una mayor respuesta nociceptiva. Durante la anestesia general, los rangos esperados de este índice rondan entre 20 y 50; un rango mayor puede provocar cierto grado de conciencia, mientras que un rango menor puede simbolizar un alto riesgo para el paciente.
+
+### c) Estimulación Térmica Localizada (Prueba de Frío en el Cuello / CPT).
+La prueba de estimulación térmica consiste en la aplicación de un estímulo frío en la piel (en este caso, mediante la colocación de una botella helada en la región cervical/cuello) durante un periodo de 30 a 40 segundos. Esta maniobra activa intensamente los termorreceptores cutáneos y desencadena un reflejo simpático agudo mediado por el sistema nervioso autónomo.  
+Esta activación simpática inmediata genera vasoconstricción periférica por la contracción del músculo liso vascular, eleva levemente la presión arterial y produce un incremento transitorio en la frecuencia cardíaca. Al registrar la señal PPG y calcular continuamente el SPI, la prueba simula una respuesta nociceptiva equivalente a un estímulo quirúrgico doloroso, permitiendo comprobar si el sistema detecta correctamente los aumentos en el índice SPI.
+
+## III. METODOLOGÍA EXPERIMENTAL 
+### a) Sensor y Circuito de Acondicionamiento Análogo (TCST110)
+Para la adquisición de la señal fotopletismográfica (PPG), se empleó un sensor óptico basado en el optointerruptor TCST110, el cual fue adecuado físicamente para funcionar en modo de reflectancia cutánea, la verificación inicial del emisor de luz infrarroja (LED IR) se realizó mediante una cámara digital para comprobar la emisión óptica continua y asegurar la correcta polarización directa del diodo.
+Como la variación en la absorción de luz por parte de los lechos capilares produce cambios de voltaje de muy baja amplitud (del orden de milivoltios) y propensos a interferencias por luz ambiental o nivel de acoplamiento, se implementó una etapa de acondicionamiento analógico.
+- Acondicionamiento del Sensor TCST110: La corriente circulante por el foto transistor del TCST110 se convierte a una señal de voltaje pulsátil mediante una red de resistencias de polarización.
+- Amplificación y Filtrado Analógico: Se utilizó una etapa de amplificación basada en un amplificador operacional (cuyo arreglo e integrados son visibles en el circuito) con un filtro pasabanda analógico diseñado para acoplar en AC la señal (eliminando la componente continua DC) y atenuar el ruido de alta frecuencia o la hum inducida por la red eléctrica.
+- Ajuste de Ganancia y Offset: Mediante potenciómetros de precisión colocados en el circuito, se ajustó manualmente el nivel de ganancia y la referencia de tensión para maximizar el rango dinámico de la onda de pulso antes de entregarla al canal de entrada analógica del microcontrolador (Arduino UNO).
 - 
-## Conclusión general
-En este laboratorio se logró capturar las señales requeridas implementando el sensor de gases MQ135 que fue previamente integrado a una mascarilla, esto permitió adquirir mejor la señal y redujo la influencia de otros factores (ruidos) que se puedan capturar del ambiente. Se registraron las señales en tiempo real correspondientes tanto a respiraciones normales como a periodos de habla, evidenciando diferencias en el comportamiento de la señal según la actividad realizada.
-Esta señal fue analizada en el dominio de la frecuencia mediante la transformada rápida de Fourier (FFT) para ver su espectro.
+### b) Explicación del circuito
 
-# Explicación del circuito 
+<img width="900" height="1600" alt="image" src="https://github.com/user-attachments/assets/693145a0-f427-4e81-9438-3b4ceead571e" />
+(Fig 1. Conección del circuito sensor TCST110 - arduino uno)
 
-| Componente | Valor | Función |
-|---|---|---|
-| Electrodo 1 (moneda) | — | Contacto con la piel con el punto de alimentación del divisor de 5V |
-| Electrodo 2 (moneda) | — | Contacto con la piel con punto a GND (referencia/tierra) |
-| R1 | 62 kΩ | Resistencia serie del divisor de tensión que actúa como una limitadora de corriente |
-| R2 | 100 kΩ | Resistencia del filtro pasa-bajas (en paralelo con el capacitor "C") |
-| C | 104 cerámico = 100 nF | Capacitor del filtro pasa-bajas (en paralelo con R2 "Resistencia de "100 kΩ") |
-| Arduino UNO | — | Adquisición analógica (ADC) |
-| ESP32 | — | Módulo destinado a transmisión inalámbrica (pendiente) |
+### c) ¿Qué hace cada componente?
 
-### ¿Qué hace cada componente?
+### d) Código de adquisición y cálculo SPI
 
-1. **Divisor de tensión** : La piel es la resistencia variable, ya que no siempre va a mostrar los mismos resultados, esta "resistencia" disminuye con el aumento la sudoración .Se presenta una activación simpática cuando hay mayores niveles de estrés, la piel se vuelve más conductiva. La resistencia "R1" está en serie con la "resistencia variable" de la piel, el voltaje cambia en función de la piel y ese voltaje es la señal cruda de GSR que se lee por el ADC.
-2. **R1** : Planteando un caso muy poco probable como que la resistencia de la piel sea 0 Ω, el circuito entraría en corto circuito, la corriente que pasa por el cuerpo del paciente esta determinada por R1 y la fuente de 5V, que más adelante explicaremos en los cálculos.
-3. **R2 y el Capacitor** : Al conectar estos dos componentes en paralelo se pretendía formar un filtro pasa-bajas que suavizaría la señal eliminando a su vez el ruido eléctrico de alta frecuencia y artefactos de movimiento propios del paciente, pero no filtraría 
+### e) Método ejecución CPT
 
-# Parte A — Revisión de literatura 
-## 1.1 Introducción
-La actividad electrodérmica (EDA) es una señal fisiológica que representa las variaciones en las propiedades eléctricas de la piel, y que se relaciona con la actividad del sistema nervioso autónomo (SNA). Fisiológicamente su origen está en las glándulas sudoríparas ecrinas, las cuales cambian la conductancia eléctrica de la piel al ser estimuladas.
+## IV. ANÁLISIS Y RESULTADOS 
 
-La EDA se utiliza principalmente en estudios de psicofisiología, para analizar respuestas fisiológicas asociadas a emociones y estrés. Especialmente por medio de aplicaciones clínicas como los dispositivos wearables, ya que permite registrar la señal de forma no invasiva y en conjunto con otras señales fisiológicas.
+<img width="1600" height="850" alt="image" src="https://github.com/user-attachments/assets/bcabcaaf-4f92-435e-8561-71d10f1d189d" />
+(Fig 3. Gráfica señal PPG en tiempo real)
 
-Al hablar de la actividad electrodérmica aparece el término GSR que hace referencia a la respuesta galvánica de la piel, que describe los cambios en la conductancia de la piel debido a la estimulación del sistema simpático. En otras palabras, GSR es una forma de describir un cambio específico dentro de la EDA, que engloba todas las variaciones eléctricas, incluyendo el nivel basal y las respuestas rápidas o fásicas.
+<img width="1600" height="765" alt="image" src="https://github.com/user-attachments/assets/d6f88da4-c650-40d6-a92c-643e01e47400" />
+(Fig 4. Onda PPG antes y después de CPT)
 
-## 1.2 Fundamentos fisiológicos
-La piel constituye una barrera eléctrica relativamente resistiva debido principalmente a la capa córnea. Sin embargo, las glándulas sudoríparas modifican significativamente las propiedades eléctricas de la piel. Estas glándulas ecrinas están reguladas por el sistema nervioso simpático, y además están distribuidas por prácticamente toda la superficie corporal, pero presentan una concentración particularmente elevada en las palmas de las manos y plantas de los pies.
+## V. CONCLUSIONES
 
-Ante un estímulo que produzca activación autonómica (como  estrés, miedo, dolor o esfuerzo físico) aumenta la actividad de las glándulas sudoríparas. Aunque este incremento puede no ser suficiente para producir sudor visible, sí puede modificar la conductancia eléctrica de la piel. Es importante aclarar que la EDA no mide directamente una emoción. Una elevación de la señal indica principalmente una mayor activación simpática, que puede aparecer en situaciones muy diferentes. Por esta razón, la EDA puede emplearse como una medida indirecta de la actividad simpática.
+## VI. PREGUNTAS PARA LA DISCUSIÓN
 
-## 1.3 Componentes de la señal EDA
-La señal EDA se divide en dos componentes:
+## VII. REFERENCIAS BIBLIOGRÁFICAS 
 
-### Componente tónico
-Conocido como SCL o skin conductance level, representa la variación lenta del nivel basal de conductancia de la piel. 
-Puede modificarse progresivamente por:
-temperatura
-hidratación
-actividad autonómica
-condiciones ambientales
-
-### Componente fásico
-Conocido como SCR o skin conductance responses es el componente que corresponde a los cambios rápidos de la señal debido a estímulos externos y repentinos como miedo, esfuerzo o estrés.
-
-La distinción entre componentes tónicos y fásicos es importante porque una persona puede presentar un nivel basal elevado sin necesariamente presentar numerosas respuestas fásicas. Las técnicas modernas de procesamiento de EDA analizan ambos componentes, en lugar de limitarse al valor promedio de la señal.
-
-## 2. Relación entre EDA y actividad cardiaca
-Una de las aplicaciones más interesantes de la EDA consiste en combinarla con señales cardiovasculares, especialmente el electrocardiograma (ECG). 
-La EDA es especialmente sensible a la actividad simpática, mientras que variables derivadas del ECG, como la variabilidad de la frecuencia cardíaca (HRV), permiten estudiar principalmente diferentes aspectos de la regulación autonómica cardíaca, con una importante contribución parasimpática en medidas como RMSSD y HF.
-
-Estudios que han analizado simultáneamente EDA y HRV han encontrado interacciones entre los componentes simpático y parasimpático del sistema nervioso autónomo. En particular, se han desarrollado métodos para estudiar la interacción temporal entre EDA y HRV durante estados de reposo y durante estímulos estresantes. 
-Cuando aumenta la GSR, frecuentemente también aumenta la frecuencia cardíaca, pero no necesariamente en una relación 1:1 ni al mismo tiempo.
-
-## 3. Relación entre EDA y actividad respiratoria
-La respiración también está estrechamente relacionada con la regulación autonómica y, por lo tanto, puede presentar modificaciones simultáneas a la EDA.
-
-Aquí existe una interacción un poco más compleja, pues la respiración sí puede modificar la actividad cardíaca, fenómeno conocido como arritmia sinusal respiratoria (RSA). Normalmente, durante la inspiración aumenta la frecuencia cardíaca, y con la espiración se disminuye.
-
-Por eso, cuando registras simultáneamente GSR + ECG + respiración, puedes observar cómo las tres señales cambian durante una misma respuesta fisiológica.
-
-Además para la práctica se implementa la técnica para generar cambios en la GSR de forma artificial, ya que la respiración profunda y, especialmente, la exhalación rápida pueden modificar la actividad autonómica y producir cambios transitorios en la GSR, por lo que la señal de la piel puede cambiar después de modificar deliberadamente el patrón respiratorio.
-
-Además, la respiración puede convertirse en una fuente de artefactos durante la adquisición de EDA. Los estudios  recientes identifican específicamente la respiración, el movimiento y el habla como fuentes fisiológicas importantes de artefactos en las señales EDA, especialmente en dispositivos wearables.
-
-# 4. Efectos de la corriente directa y alterna en seres humanos según IEC 60479-1
-
-La norma IEC 60479-1:2018, Effects of current on human beings and livestock – Part 1: General aspects, constituye una referencia internacional para describir los efectos de la corriente eléctrica sobre seres humanos y animales.
-
-Los efectos producidos por una descarga no dependen exclusivamente de la magnitud de la corriente. También influyen:
-duración del contacto
-frecuencia
-trayectoria de la corriente
-impedancia corporal
-estado de la piel
-tamaño del área de contacto
-condiciones ambientales
-
-Por esto, una corriente determinada no necesariamente produce el mismo efecto en todas las personas o bajo todas las condiciones.
-
-## 4.1 Impedancia del cuerpo humano
-El cuerpo humano no se comporta como una resistencia eléctrica pura.
-
-La piel constituye una parte importante de la impedancia total y sus propiedades eléctricas dependen de factores como humedad, presión, área de contacto y tensión aplicada.
-
-Este aspecto tiene una conexión conceptual importante con la EDA: mientras la IEC analiza la impedancia del cuerpo desde la perspectiva de la seguridad frente al choque eléctrico, la EDA aprovecha las variaciones de las propiedades eléctricas de la piel para estudiar actividad fisiológica.
-
-## 4.2 Efectos de la corriente alterna
-La IEC 60479-1 clasifica los efectos de la corriente alterna en diferentes zonas tiempo-corriente.
-Para corriente alterna, las zonas se denominan:
-
-### AC-1
-Puede producirse percepción de la corriente, pero normalmente no se esperan respuestas fisiológicas peligrosas.
-
-### AC-2
-Puede aparecer percepción y contracción muscular involuntaria, aunque normalmente sin efectos fisiológicos peligrosos.
-
-### AC-3
-Puede producir contracciones musculares fuertes, dificultad respiratoria, inmovilización, alteraciones cardíacas reversibles.
-
-### AC-4
-Representa una zona de mayor peligro y pueden aparecer:
-fibrilación ventricular;
-paro cardíaco;
-paro respiratorio;
-quemaduras;
-
-La zona AC-4 se subdivide adicionalmente según el aumento de la probabilidad de fibrilación ventricular.
-
-## 4.3 Efectos de la corriente directa
-La norma clasifica los efectos de la corriente directa en cuatro zonas, dependiendo principalmente de la intensidad de corriente y el tiempo de exposición:
-
-### DC-1
-Generalmente no se percibe la corriente. En algunos casos puede existir una ligera sensación.
-
-### DC-2
-Puede producirse percepción de la corriente y contracciones musculares involuntarias, pero normalmente sin efectos fisiológicos peligrosos.
-
-### DC-3
-Pueden aparecer contracciones musculares fuertes, dificultad para respirar y alteraciones reversibles en la actividad cardíaca.
-
-### DC-4
-Zona de mayor peligro. Puede producir paro respiratorio, paro cardíaco, quemaduras y fibrilación ventricular, aumentando el riesgo con la intensidad y duración de la exposición.
-
-## 4.4 Relación entre IEC 60479 y el diseño de un sensor EDA
-La IEC 60479 estudia los efectos potencialmente peligrosos de las corrientes que atraviesan el cuerpo humano. En cambio, un sistema de EDA está diseñado para realizar una medición fisiológica de baja energía.
-
-Por lo tanto, el hecho de que la EDA pueda medirse utilizando una señal eléctrica no significa que se deban aplicar al cuerpo corrientes cercanas a los niveles estudiados en la IEC 60479.
-
-La norma de efectos fisiológicos sirve, en este contexto, como fundamento para comprender por qué debe controlarse estrictamente la corriente que puede circular por el cuerpo.
-
-
-# Parte B — 
-# Parte C — 
-
-# 15. Preguntas para la discusión
-## 1. ¿A qué se debe que una inspiración profunda incremente la magnitud de la respuesta galvánica cutánea (GSR)?
-Una inspiración profunda, especialmente cuando está acompañada de una exhalación rápida, puede generar cambios en la actividad del sistema nervioso autónomo. Estos cambios pueden aumentar temporalmente la actividad de las glándulas sudoríparas, haciendo que la piel sea más conductora eléctricamente. Como consecuencia, disminuye la resistencia de la piel y aumenta la conductancia, lo que se observa como un incremento en la magnitud de la señal GSR, que se evidencia en la gráfica como picos o aumento de la señal. Por lo tanto, la respiración profunda actúa como un estímulo capaz de producir una respuesta transitoria en la actividad electrodérmica.
-
-## 2. ¿Cuáles serían las ventajas y desventajas de utilizar la GSR como indicador de estrés?
-### Ventajas:
--Es una técnica sencilla y no invasiva.
--Es sensible a cambios en la actividad del sistema nervioso simpático.
--Permite detectar cambios rápidos en la activación fisiológica.
--Es relativamente fácil de implementar en dispositivos portátiles.
--Puede combinarse con otras señales, como ECG y respiración, para obtener una evaluación más completa.
-
-### Desventajas:
--La GSR no es específica del estrés, ya que también puede cambiar por emociones, ejercicio, dolor o excitación.
--Puede verse afectada por factores externos como temperatura, humedad y movimiento.
--Existe una variabilidad considerable entre diferentes personas.
--Por sí sola no permite determinar la causa exacta del cambio observado.
-
-En conclusión, la GSR es un buen indicador de activación fisiológica asociada al estrés, pero es recomendable combinarla con otras señales fisiológicas para obtener una interpretación más confiable.
-
-# Bibliografía
-[1] 
-[4] Components101, "MQ135 Gas Sensor," [Online]. Disponible en: https://components101.com/sensors/mq135-gas-sensor-for-air-quality
 

@@ -112,8 +112,8 @@ En la práctica clínica existen distintos índices para evaluar la respuesta au
 
 
 ## VII. REFERENCIAS BIBLIOGRÁFICAS 
-[1] Universidad Militar Nueva Granada, Guía de Laboratorio No. 2: Cálculo Ambulatorio del Índice Pletismográfico Quirúrgico (SPI), Programa de Ingeniería Biomédica, Bogotá, Colombia, 2026.
-[2] J. S. P. Ahonen, M. Uutela, e I. Korhonen, "Surgical Pleth Index (SPI) for monitoring nociception/analgesia balance during general anesthesia," Acta Anaesthesiologica Scandinavica, vol. 51, no. 7, pp. 815-822, 2007.
-[3] M. Huiku et al., "Assessment of surgical stress level using photo-plethysmographic pulse wave amplitude and heart beat interval," Acta Anaesthesiologica Scandinavica, vol. 51, no. 9, pp. 1182-1192, 2007.
-[4] R. Cowen, M. Stasiowski, H. Laycock, y C. M. Lopinto, "Assessing pain objectively: the Analgesia Nociception Index (ANI) and Surgical Pleth Index (SPI)," BJA Education, vol. 15, no. 3, pp. 117-123, 2015.
-[5] Vishay Semiconductors, TCST1103, TCST1202, TCST1300 Transmissive Optical Sensor with Phototransistor Output, Datasheet Rev. 1.9, Document Number: 83763, 2019.
+- [1] Universidad Militar Nueva Granada, Guía de Laboratorio No. 2: Cálculo Ambulatorio del Índice Pletismográfico Quirúrgico (SPI), Programa de Ingeniería Biomédica, Bogotá, Colombia, 2026.
+- [2] J. S. P. Ahonen, M. Uutela, e I. Korhonen, "Surgical Pleth Index (SPI) for monitoring nociception/analgesia balance during general anesthesia," Acta Anaesthesiologica Scandinavica, vol. 51, no. 7, pp. 815-822, 2007.
+- [3] M. Huiku et al., "Assessment of surgical stress level using photo-plethysmographic pulse wave amplitude and heart beat interval," Acta Anaesthesiologica Scandinavica, vol. 51, no. 9, pp. 1182-1192, 2007.
+- [4] R. Cowen, M. Stasiowski, H. Laycock, y C. M. Lopinto, "Assessing pain objectively: the Analgesia Nociception Index (ANI) and Surgical Pleth Index (SPI)," BJA Education, vol. 15, no. 3, pp. 117-123, 2015.
+- [5] Vishay Semiconductors, TCST1103, TCST1202, TCST1300 Transmissive Optical Sensor with Phototransistor Output, Datasheet Rev. 1.9, Document Number: 83763, 2019.
